@@ -1,0 +1,28 @@
+<div>
+  <div>
+    <h3>Your new challenge is</h3>
+    <h1>
+      {{ challenge.factorA }} x {{ challenge.factorB }}
+    </h1>
+  </div>
+  <form #challengeForm="ngForm">
+    <label>
+      Your alias:
+      <input type="text"
+             [(ngModel)]="formAttempt.userAlias" name="userAlias" #userAliasField="ngModel">
+    </label>
+    <br>
+    <label>
+      Your guess:
+      <input type="number" min="0"
+          [(ngModel)]="formAttempt.guess" name="guess" #guessField="ngModel">
+    </label>
+    <br>
+    <button type="button" (click)="onSubmit()">
+      Send Guess
+    </button>
+  </form>
+  <div>
+    <span>{{ message }}</span>
+  </div>
+</div>
