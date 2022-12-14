@@ -1,9 +1,23 @@
 package learn.mssb.mssbmultiplication.user;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Value
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "users")
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
-    Long id;
-    String alias;
+    @Id
+    @GeneratedValue
+    private Long id;
+    private String alias;
 }

@@ -27,3 +27,30 @@ Notes on implementation
 
 * [Constraints Docs](https://docs.jboss.org/hibernate/beanvalidation/spec/2.0/api/javax/validation/constraints/package-summary.html)
 * [Custom Error Handling](https://thepracticaldeveloper.com/custom-error-handling-rest-controllers-spring-boot/)
+
+#### Dealing with jackson's InvalidDefinitionException
+
+We get InvalidDefinitionException because of Lazy Initialization of field "user" in ChallengeAttempt.
+This user is not queried at the moment of serialization so the exception is thrown:
+```
+com.fasterxml.jackson.databind.exc.InvalidDefinitionException: 
+No serializer found for class org.hibernate.proxy.pojo.bytebuddy.ByteBuddyInterceptor
+```
+In order to customize the JSON serialization:
+* add dependency for jackson-datatype-hibernate5
+```xml
+<dependency>
+    <groupId>com.fasterxml.jackson.datatype</groupId>
+    <artifactId>jackson-datatype-hibernate5</artifactId>
+</dependency>
+```
+* create a bean for Hibernate module for Jackson
+```java
+@Configuration
+public class JsonConfiguration {
+    @Bean
+    public Module hibernateModule() {
+        return new Hibernate5Module();
+    }
+}
+```
