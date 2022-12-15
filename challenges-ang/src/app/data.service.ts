@@ -12,6 +12,7 @@ import {ChallengeAttemptResult} from "./model/challenge-attempt-result";
 export class DataService {
   readonly getChallenge = environment.restUrl + '/challenges/random';
   readonly postResult = environment.restUrl + '/attempts'
+  readonly getAttemptsByAlias = environment.restUrl + '/attempts?alias='
 
   constructor(private http: HttpClient) { }
 
@@ -21,5 +22,9 @@ export class DataService {
 
   public sendGuess(attempt: ChallengeAttemptRequest): Observable<ChallengeAttemptResult> {
     return this.http.post<ChallengeAttemptResult>(this.postResult, attempt);
+  }
+
+  public getAttempts(userAlias: string): Observable<ChallengeAttemptResult[]> {
+    return this.http.get<ChallengeAttemptResult[]>(this.getAttemptsByAlias + userAlias);
   }
 }

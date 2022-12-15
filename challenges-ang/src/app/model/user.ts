@@ -1,4 +1,4 @@
 export class User {
-  constructor(id: number, alias: string) {
+  constructor(public id: number, public alias: string) {
   }
 }

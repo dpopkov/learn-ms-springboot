@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {DataService} from "../data.service";
 import {Challenge} from "../model/challenge";
 import {ChallengeAttemptRequest} from "../model/challenge-attempt-request";
+import {ChallengeAttemptResult} from "../model/challenge-attempt-result";
 
 @Component({
   selector: 'app-challenge',
@@ -13,6 +14,7 @@ export class ChallengeComponent implements OnInit {
   challenge = new Challenge(-1, -1);
   formAttempt = new ChallengeAttemptRequest('', -1, -1, -1);
   message = '';
+  lastAttempts = new Array<ChallengeAttemptResult>();
 
   constructor(private dataService: DataService) { }
 
@@ -36,6 +38,19 @@ export class ChallengeComponent implements OnInit {
         console.log('Received result ', attemptResult);
         console.log('Guess is ', attemptResult.correct);
         this.message = `Your guess is ${attemptResult.correct ? 'correct' : 'wrong'}`;
+        this.updateLastAttempts(attemptResult.user.alias)
+      },
+      error => {
+        console.log('Something went wrong: ', error);
+      }
+    )
+  }
+
+  updateLastAttempts(userAlias: string) {
+    this.dataService.getAttempts(userAlias).subscribe(
+      next => {
+        this.lastAttempts = next;
+        console.log('Received list of attempts size=', this.lastAttempts.length);
       },
       error => {
         console.log('Something went wrong: ', error);
