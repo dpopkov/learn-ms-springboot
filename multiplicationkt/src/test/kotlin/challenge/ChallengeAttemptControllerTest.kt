@@ -16,6 +16,7 @@ import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 
 @ExtendWith(SpringExtension::class)
 @AutoConfigureJsonTesters
@@ -40,7 +41,7 @@ class ChallengeAttemptControllerTest {
         val attemptId = 5L
         val attemptDTO = ChallengeAttemptDTO(factorA = 50, factorB = 70, userAlias = "john", guess = 3500)
         val expectedResponse =
-            ChallengeAttempt(attemptId, user, factorA = 50, factorB = 70, resultAttempt = 3500, correct = true)
+            ChallengeAttempt(user, factorA = 50, factorB = 70, resultAttempt = 3500, correct = true, attemptId)
         given(
             challengeService.verifyAttempt(attemptDTO)
         )
@@ -68,5 +69,15 @@ class ChallengeAttemptControllerTest {
         ).andReturn().response
         // then
         then(response.status).isEqualTo(HttpStatus.BAD_REQUEST.value())
+    }
+
+    @Test
+    fun `get statistics for user`() {
+        // when
+        val response: MockHttpServletResponse = mvc.perform(
+            get("/attempts").param("alias", "john")
+        ).andReturn().response
+        // then
+        then(response.status).isEqualTo(HttpStatus.OK.value())
     }
 }
